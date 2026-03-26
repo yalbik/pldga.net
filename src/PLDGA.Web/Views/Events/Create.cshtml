@@ -1,0 +1,18 @@
+@model CreateEventDto
+@{ ViewData["Title"] = "Create Event"; }
+
+<h2 class="section-title">Create Event</h2>
+<div class="row"><div class="col-md-8">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <form asp-action="Create" method="post">
+        <div class="mb-3"><label class="form-label">Event Name</label><input asp-for="Name" class="form-control" required /></div>
+        <div class="mb-3"><label class="form-label">Date</label><input asp-for="Date" type="datetime-local" class="form-control" required /></div>
+        <div class="mb-3"><label class="form-label">Location Name</label><input asp-for="LocationName" class="form-control" /></div>
+        <div class="mb-3"><label class="form-label">Location Address</label><input asp-for="LocationAddress" class="form-control" /></div>
+        <div class="mb-3"><label class="form-label">Course Info</label><input asp-for="CourseInfo" class="form-control" /></div>
+        <div class="mb-3"><label class="form-label">Max Participants</label><input asp-for="MaxParticipants" type="number" class="form-control" /></div>
+        <div class="mb-3"><label class="form-label">Registration Deadline</label><input asp-for="RegistrationDeadline" type="datetime-local" class="form-control" /></div>
+        <button type="submit" class="btn btn-pldga">Create Event</button>
+        <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+    </form>
+</div></div>

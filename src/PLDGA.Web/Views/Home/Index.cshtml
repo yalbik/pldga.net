@@ -1,0 +1,96 @@
+﻿@model HomeViewModel
+@{ ViewData["Title"] = "Home"; }
+
+<div class="hero-section text-center">
+    <div class="container">
+        <h1 class="display-4 fw-bold">🥏 Parkland Disc Golf Association</h1>
+        <p class="lead">Disc Golf in the Puget Sound &middot; Parkland, WA</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="mb-5">
+        <h2 class="section-title">🏆 Top Players</h2>
+        @if (Model.TopPlayers.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-light"><tr><th>Rank</th><th>Player</th><th>Points</th><th>Events</th></tr></thead>
+                    <tbody>
+                        @foreach (var p in Model.TopPlayers)
+                        {
+                            var rankClass = p.Rank <= 3 ? $"rank-{p.Rank}" : "rank-other";
+                            <tr>
+                                <td><span class="rank-badge @rankClass">@p.Rank</span></td>
+                                <td>
+                                    <a asp-controller="Leaderboard" asp-action="Player" asp-route-id="@p.MemberId">@p.MemberName</a>
+                                    @if (!p.IsPaid) { <span class="badge-unpaid ms-1">Unpaid</span> }
+                                </td>
+                                <td><strong>@p.TotalPoints</strong></td>
+                                <td>@p.EventsPlayed</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <a asp-controller="Leaderboard" asp-action="Index" class="btn btn-outline-pldga">View Full Leaderboard →</a>
+        }
+        else { <p class="text-muted">No standings yet this season.</p> }
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6 mb-4">
+            <h2 class="section-title">📅 Upcoming Events</h2>
+            @if (Model.UpcomingEvents.Any())
+            {
+                @foreach (var e in Model.UpcomingEvents)
+                {
+                    <div class="card card-pldga mb-3"><div class="card-body">
+                        <h5 class="card-title">@e.Name</h5>
+                        <p class="card-text text-muted mb-1">@e.Date.ToString("MMMM dd, yyyy") &middot; @e.LocationName</p>
+                        <p class="card-text"><small>@e.RegisteredCount / @e.MaxParticipants registered</small></p>
+                        <a asp-controller="Events" asp-action="Details" asp-route-id="@e.Id" class="btn btn-sm btn-pldga">View Details</a>
+                    </div></div>
+                }
+            }
+            else { <p class="text-muted">No upcoming events.</p> }
+            <a asp-controller="Events" asp-action="Index" class="btn btn-outline-pldga">All Events →</a>
+        </div>
+        <div class="col-lg-6 mb-4">
+            <h2 class="section-title">📰 Latest News</h2>
+            @if (Model.RecentNews.Any())
+            {
+                @foreach (var n in Model.RecentNews.Take(4))
+                {
+                    <div class="card card-pldga mb-3"><div class="card-body">
+                        <h5 class="card-title">@n.Title</h5>
+                        <p class="card-text text-muted mb-1">By @n.AuthorName &middot; @n.CreatedDate.ToString("MMM dd, yyyy")</p>
+                        <p class="card-text">@(n.Content.Length > 120 ? n.Content[..120] + "..." : n.Content)</p>
+                        <a asp-controller="News" asp-action="Details" asp-route-id="@n.Id" class="btn btn-sm btn-outline-pldga">Read More</a>
+                    </div></div>
+                }
+            }
+            else { <p class="text-muted">No news articles yet.</p> }
+            <a asp-controller="News" asp-action="Index" class="btn btn-outline-pldga">All News →</a>
+        </div>
+    </div>
+
+    <div class="mb-5">
+        <h2 class="section-title">📊 Active Polls</h2>
+        @if (Model.ActivePolls.Any())
+        {
+            <div class="row">
+                @foreach (var poll in Model.ActivePolls)
+                {
+                    <div class="col-md-4 mb-3"><div class="card card-pldga"><div class="card-body">
+                        <h5 class="card-title">@poll.Question</h5>
+                        <p class="text-muted">@poll.TotalVotes votes</p>
+                        <a asp-controller="Polls" asp-action="Details" asp-route-id="@poll.Id" class="btn btn-sm btn-pldga">Vote / View</a>
+                    </div></div></div>
+                }
+            </div>
+        }
+        else { <p class="text-muted">No active polls.</p> }
+        <a asp-controller="Polls" asp-action="Index" class="btn btn-outline-pldga">All Polls →</a>
+    </div>
+</div>

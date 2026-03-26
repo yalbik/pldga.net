@@ -1,0 +1,33 @@
+@model EventDto
+@{
+    ViewData["Title"] = "Record Results";
+    var allMembers = ViewData["AllMembers"] as List<MemberDto> ?? new();
+}
+
+<h2 class="section-title">Record Results - @Model.Name</h2>
+<form asp-action="RecordResults" method="post">
+    <input type="hidden" name="id" value="@Model.Id" />
+    <table class="table" id="resultsTable">
+        <thead><tr><th>Player</th><th>Placement</th><th>Score</th></tr></thead>
+        <tbody>
+            @for (int i = 0; i < Math.Max(Model.RegisteredCount, 1); i++)
+            {
+                <tr>
+                    <td>
+                        <select name="results[@i].MemberId" class="form-select">
+                            <option value="">-- Select Player --</option>
+                            @foreach (var m in allMembers)
+                            {
+                                <option value="@m.Id">@m.FullName @(m.IsPaid ? "" : "(Unpaid)")</option>
+                            }
+                        </select>
+                    </td>
+                    <td><input name="results[@i].Placement" type="number" class="form-control" value="@(i+1)" /></td>
+                    <td><input name="results[@i].Score" type="number" class="form-control" value="0" /></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <button type="submit" class="btn btn-pldga">Save Results & Complete Event</button>
+    <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-secondary">Cancel</a>
+</form>

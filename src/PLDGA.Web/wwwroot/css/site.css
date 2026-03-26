@@ -1,0 +1,141 @@
+:root {
+    --pldga-primary: #2d6a4f;
+    --pldga-secondary: #40916c;
+    --pldga-accent: #52b788;
+    --pldga-light: #d8f3dc;
+    --pldga-dark: #1b4332;
+}
+
+html { font-size: 14px; }
+@media (min-width: 768px) { html { font-size: 16px; } }
+
+body {
+    margin-bottom: 60px;
+    min-height: 100vh;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem var(--pldga-accent);
+}
+
+/* Navbar */
+.navbar-pldga {
+    background: linear-gradient(135deg, var(--pldga-dark), var(--pldga-primary));
+}
+.navbar-pldga .navbar-brand,
+.navbar-pldga .nav-link {
+    color: #fff !important;
+}
+.navbar-pldga .nav-link:hover {
+    color: var(--pldga-light) !important;
+}
+
+/* Hero / Home */
+.hero-section {
+    background: linear-gradient(135deg, var(--pldga-dark), var(--pldga-primary));
+    color: white;
+    padding: 3rem 0;
+    margin-bottom: 2rem;
+    border-radius: 0 0 1rem 1rem;
+}
+
+.section-title {
+    color: var(--pldga-dark);
+    border-bottom: 3px solid var(--pldga-accent);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Cards */
+.card-pldga {
+    border: none;
+    border-radius: 0.75rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.card-pldga:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+}
+
+/* Leaderboard */
+.rank-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    font-weight: bold;
+    color: #fff;
+}
+.rank-1 { background: #ffd700; color: #333; }
+.rank-2 { background: #c0c0c0; color: #333; }
+.rank-3 { background: #cd7f32; }
+.rank-other { background: var(--pldga-secondary); }
+
+/* Unpaid badge */
+.badge-unpaid {
+    background-color: #dc3545;
+    color: white;
+    font-size: 0.7rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.25rem;
+    vertical-align: middle;
+}
+.badge-paid {
+    background-color: #198754;
+    color: white;
+    font-size: 0.7rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.25rem;
+    vertical-align: middle;
+}
+
+/* Poll bars */
+.poll-bar {
+    height: 1.5rem;
+    background-color: var(--pldga-light);
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+.poll-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--pldga-primary), var(--pldga-accent));
+    border-radius: 0.5rem;
+    transition: width 0.3s;
+}
+
+/* Footer */
+.footer-pldga {
+    background: var(--pldga-dark);
+    color: var(--pldga-light);
+}
+.footer-pldga a { color: var(--pldga-accent); }
+
+/* Admin dashboard cards */
+.stat-card {
+    border-left: 4px solid var(--pldga-accent);
+}
+
+/* Btn overrides */
+.btn-pldga {
+    background-color: var(--pldga-primary);
+    border-color: var(--pldga-primary);
+    color: #fff;
+}
+.btn-pldga:hover {
+    background-color: var(--pldga-dark);
+    border-color: var(--pldga-dark);
+    color: #fff;
+}
+
+.btn-outline-pldga {
+    color: var(--pldga-primary);
+    border-color: var(--pldga-primary);
+}
+.btn-outline-pldga:hover {
+    background-color: var(--pldga-primary);
+    color: #fff;
+}

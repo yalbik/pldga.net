@@ -1,0 +1,72 @@
+@model IEnumerable<MemberDto>
+@{ ViewData["Title"] = "Members"; var filter = ViewData["Filter"] as string; }
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="section-title mb-0">👥 Members</h2>
+    <a asp-action="Create" class="btn btn-pldga">+ Add Member</a>
+</div>
+
+<div class="mb-3">
+    <a asp-action="Index" class="btn btn-sm @(filter == null ? "btn-pldga" : "btn-outline-pldga")">All</a>
+    <a asp-action="Index" asp-route-filter="paid" class="btn btn-sm @(filter == "paid" ? "btn-pldga" : "btn-outline-pldga")">Paid</a>
+    <a asp-action="Index" asp-route-filter="unpaid" class="btn btn-sm @(filter == "unpaid" ? "btn-pldga" : "btn-outline-pldga")">Unpaid</a>
+</div>
+
+<form asp-action="BulkPay" method="post">
+    <table class="table table-hover">
+        <thead class="table-light">
+            <tr>
+                <th><input type="checkbox" id="selectAll" /></th>
+                <th>Name</th><th>Email</th><th>Status</th><th>Points</th><th>Registered</th><th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var m in Model)
+            {
+                <tr>
+                    <td><input type="checkbox" name="memberIds" value="@m.Id" /></td>
+                    <td>
+                        @m.FullName
+                        @if (m.IsAdmin) { <span class="badge bg-primary ms-1">Admin</span> }
+                    </td>
+                    <td>@m.Email</td>
+                    <td>
+                        @if (m.IsPaid)
+                        {
+                            <span class="badge-paid">Paid</span>
+                            <form asp-action="TogglePayment" method="post" class="d-inline">
+                                <input type="hidden" name="id" value="@m.Id" />
+                                <input type="hidden" name="isPaid" value="false" />
+                                <button type="submit" class="btn btn-link btn-sm text-danger p-0 ms-1" title="Mark Unpaid">✗</button>
+                            </form>
+                        }
+                        else
+                        {
+                            <span class="badge-unpaid">Unpaid</span>
+                            <form asp-action="TogglePayment" method="post" class="d-inline">
+                                <input type="hidden" name="id" value="@m.Id" />
+                                <input type="hidden" name="isPaid" value="true" />
+                                <button type="submit" class="btn btn-link btn-sm text-success p-0 ms-1" title="Mark Paid">✓</button>
+                            </form>
+                        }
+                    </td>
+                    <td>@m.CurrentSeasonPoints</td>
+                    <td>@m.RegistrationDate.ToString("MMM dd, yyyy")</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@m.Id" class="btn btn-sm btn-outline-secondary">Edit</a>
+                        <a asp-action="Profile" asp-route-id="@m.Id" class="btn btn-sm btn-outline-pldga">Profile</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <button type="submit" class="btn btn-success">Mark Selected as Paid</button>
+</form>
+
+@section Scripts {
+<script>
+    document.getElementById('selectAll').addEventListener('change', function() {
+        document.querySelectorAll('input[name="memberIds"]').forEach(cb => cb.checked = this.checked);
+    });
+</script>
+}

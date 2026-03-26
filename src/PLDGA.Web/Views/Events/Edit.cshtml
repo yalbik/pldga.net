@@ -1,0 +1,18 @@
+@model EventDto
+@{ ViewData["Title"] = "Edit Event"; }
+
+<h2 class="section-title">Edit Event</h2>
+<div class="row"><div class="col-md-8">
+    <form asp-action="Edit" method="post">
+        <input type="hidden" asp-for="Id" />
+        <div class="mb-3"><label class="form-label">Event Name</label><input asp-for="Name" class="form-control" required /></div>
+        <div class="mb-3"><label class="form-label">Date</label><input asp-for="Date" type="datetime-local" class="form-control" /></div>
+        <div class="mb-3"><label class="form-label">Location Name</label><input asp-for="LocationName" class="form-control" /></div>
+        <div class="mb-3"><label class="form-label">Location Address</label><input asp-for="LocationAddress" class="form-control" /></div>
+        <div class="mb-3"><label class="form-label">Course Info</label><input asp-for="CourseInfo" class="form-control" /></div>
+        <div class="mb-3"><label class="form-label">Max Participants</label><input asp-for="MaxParticipants" type="number" class="form-control" /></div>
+        <div class="mb-3"><label class="form-label">Registration Deadline</label><input asp-for="RegistrationDeadline" type="datetime-local" class="form-control" /></div>
+        <button type="submit" class="btn btn-pldga">Save Changes</button>
+        <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-secondary">Cancel</a>
+    </form>
+</div></div>

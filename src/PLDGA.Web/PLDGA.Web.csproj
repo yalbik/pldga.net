@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <ItemGroup>
+    <ProjectReference Include="..\PLDGA.Application\PLDGA.Application.csproj" />
+    <ProjectReference Include="..\PLDGA.Infrastructure\PLDGA.Infrastructure.csproj" />
+    <ProjectReference Include="..\PLDGA.Domain\PLDGA.Domain.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+</Project>

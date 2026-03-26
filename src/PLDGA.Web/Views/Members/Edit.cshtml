@@ -1,0 +1,19 @@
+@model UpdateMemberDto
+@{ ViewData["Title"] = "Edit Member"; }
+
+<h2 class="section-title">Edit Member</h2>
+<div class="row"><div class="col-md-8">
+    <form asp-action="Edit" method="post">
+        <input type="hidden" asp-for="Id" />
+        <div class="row">
+            <div class="col-md-6 mb-3"><label class="form-label">First Name</label><input asp-for="FirstName" class="form-control" required /></div>
+            <div class="col-md-6 mb-3"><label class="form-label">Last Name</label><input asp-for="LastName" class="form-control" required /></div>
+        </div>
+        <div class="mb-3"><label class="form-label">Email</label><input asp-for="Email" type="email" class="form-control" /></div>
+        <div class="mb-3"><label class="form-label">Phone</label><input asp-for="Phone" class="form-control" /></div>
+        <div class="form-check mb-3"><input asp-for="IsPaid" class="form-check-input" /><label class="form-check-label">Paid</label></div>
+        <div class="form-check mb-3"><input asp-for="IsAdmin" class="form-check-input" /><label class="form-check-label">Admin</label></div>
+        <button type="submit" class="btn btn-pldga">Save</button>
+        <a asp-controller="Members" asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+    </form>
+</div></div>

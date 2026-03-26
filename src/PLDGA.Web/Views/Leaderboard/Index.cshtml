@@ -1,0 +1,40 @@
+@model IEnumerable<LeaderboardEntryDto>
+@{ ViewData["Title"] = "Leaderboard"; var year = (int)ViewData["Year"]!; }
+
+<h2 class="section-title">🏆 Season @year Leaderboard</h2>
+
+<div class="mb-3">
+    <a asp-action="Index" asp-route-year="@(year-1)" class="btn btn-sm btn-outline-secondary">← @(year-1)</a>
+    <a asp-action="Index" asp-route-year="@(year+1)" class="btn btn-sm btn-outline-secondary">@(year+1) →</a>
+</div>
+
+@if (Model.Any())
+{
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead class="table-light">
+                <tr><th>Rank</th><th>Player</th><th>Points</th><th>Events Played</th><th></th></tr>
+            </thead>
+            <tbody>
+                @foreach (var e in Model)
+                {
+                    var rankClass = e.Rank <= 3 ? $"rank-{e.Rank}" : "rank-other";
+                    <tr>
+                        <td><span class="rank-badge @rankClass">@e.Rank</span></td>
+                        <td>
+                            @e.MemberName
+                            @if (!e.IsPaid) { <span class="badge-unpaid ms-1">Unpaid</span> }
+                        </td>
+                        <td><strong>@e.TotalPoints</strong></td>
+                        <td>@e.EventsPlayed</td>
+                        <td><a asp-action="Player" asp-route-id="@e.MemberId" asp-route-year="@year" class="btn btn-sm btn-outline-pldga">Details</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <p class="text-muted">No results for this season yet.</p>
+}

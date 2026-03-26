@@ -1,0 +1,37 @@
+@model PollDto
+@{ ViewData["Title"] = Model.Question; }
+
+<h2 class="section-title">@Model.Question</h2>
+<p class="text-muted">By @Model.CreatedByName &middot; @Model.TotalVotes total votes &middot; Status: <span class="badge bg-info">@Model.Status</span></p>
+
+@if (!Model.HasUserVoted && Model.Status == PollStatus.Active)
+{
+    <form asp-action="Vote" method="post">
+        <input type="hidden" name="pollId" value="@Model.Id" />
+        @foreach (var a in Model.Answers)
+        {
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="radio" name="answerId" value="@a.Id" id="a_@a.Id" required />
+                <label class="form-check-label" for="a_@a.Id">@a.Text</label>
+            </div>
+        }
+        <button type="submit" class="btn btn-pldga mt-2">Vote</button>
+    </form>
+}
+else
+{
+    @foreach (var a in Model.Answers)
+    {
+        <div class="mb-3">
+            <div class="d-flex justify-content-between mb-1">
+                <span>@a.Text</span>
+                <span>@a.VoteCount votes (@a.Percentage%)</span>
+            </div>
+            <div class="poll-bar">
+                <div class="poll-bar-fill" style="width: @a.Percentage%"></div>
+            </div>
+        </div>
+    }
+}
+
+<a asp-action="Index" class="btn btn-outline-pldga mt-3">← Back to Polls</a>
