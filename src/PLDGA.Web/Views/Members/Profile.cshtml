@@ -15,6 +15,7 @@
             <p><strong>Member Since:</strong> @Model.RegistrationDate.ToString("MMMM dd, yyyy")</p>
             @if (Model.PaymentDate.HasValue) { <p><strong>Payment Date:</strong> @Model.PaymentDate.Value.ToString("MMMM dd, yyyy")</p> }
             <p><strong>Role:</strong> @(Model.IsAdmin ? "Admin" : "Member")</p>
+            <a asp-controller="Account" asp-action="ChangePassword" class="btn btn-sm btn-outline-pldga">Change Password</a>
         </div></div>
     </div>
     <div class="col-md-6">

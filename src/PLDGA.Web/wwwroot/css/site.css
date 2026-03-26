@@ -1,9 +1,9 @@
 :root {
-    --pldga-primary: #2d6a4f;
-    --pldga-secondary: #40916c;
-    --pldga-accent: #52b788;
-    --pldga-light: #d8f3dc;
-    --pldga-dark: #1b4332;
+    --pldga-primary: #4A8FC2;
+    --pldga-secondary: #D4792A;
+    --pldga-accent: #E89A3E;
+    --pldga-light: #EAF2F8;
+    --pldga-dark: #2C3E50;
 }
 
 html { font-size: 14px; }
@@ -19,9 +19,40 @@ body {
     box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem var(--pldga-accent);
 }
 
+/* Logo */
+.navbar-logo {
+    height: 40px;
+    width: 40px;
+    object-fit: contain;
+    border-radius: 50%;
+    margin-right: 0.5rem;
+}
+.hero-logo {
+    height: 120px;
+    width: 120px;
+    object-fit: contain;
+    border-radius: 50%;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+}
+.login-logo {
+    height: 80px;
+    width: 80px;
+    object-fit: contain;
+    border-radius: 50%;
+    margin-bottom: 0.5rem;
+}
+.footer-logo {
+    height: 48px;
+    width: 48px;
+    object-fit: contain;
+    border-radius: 50%;
+    margin-bottom: 0.5rem;
+}
+
 /* Navbar */
 .navbar-pldga {
-    background: linear-gradient(135deg, var(--pldga-dark), var(--pldga-primary));
+    background: linear-gradient(135deg, var(--pldga-dark), #3A6E9F);
 }
 .navbar-pldga .navbar-brand,
 .navbar-pldga .nav-link {
@@ -33,7 +64,7 @@ body {
 
 /* Hero / Home */
 .hero-section {
-    background: linear-gradient(135deg, var(--pldga-dark), var(--pldga-primary));
+    background: linear-gradient(135deg, var(--pldga-dark), #3A6E9F, var(--pldga-secondary));
     color: white;
     padding: 3rem 0;
     margin-bottom: 2rem;
@@ -73,7 +104,7 @@ body {
 .rank-1 { background: #ffd700; color: #333; }
 .rank-2 { background: #c0c0c0; color: #333; }
 .rank-3 { background: #cd7f32; }
-.rank-other { background: var(--pldga-secondary); }
+.rank-other { background: var(--pldga-primary); }
 
 /* Unpaid badge */
 .badge-unpaid {
@@ -102,7 +133,7 @@ body {
 }
 .poll-bar-fill {
     height: 100%;
-    background: linear-gradient(90deg, var(--pldga-primary), var(--pldga-accent));
+    background: linear-gradient(90deg, var(--pldga-primary), var(--pldga-secondary));
     border-radius: 0.5rem;
     transition: width 0.3s;
 }
@@ -116,7 +147,7 @@ body {
 
 /* Admin dashboard cards */
 .stat-card {
-    border-left: 4px solid var(--pldga-accent);
+    border-left: 4px solid var(--pldga-secondary);
 }
 
 /* Btn overrides */

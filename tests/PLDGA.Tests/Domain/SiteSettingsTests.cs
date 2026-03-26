@@ -17,7 +17,7 @@ public class SiteSettingsTests
         Assert.That(settings.DefaultPollDurationDays, Is.EqualTo(7));
         Assert.That(settings.MaxImageSizeMb, Is.EqualTo(5));
         Assert.That(settings.SiteTitle, Is.EqualTo("Parkland Disc Golf Association"));
-        Assert.That(settings.PrimaryColor, Is.EqualTo("#2d6a4f"));
+        Assert.That(settings.PrimaryColor, Is.EqualTo("#4A8FC2"));
         Assert.That(settings.CurrentSeasonYear, Is.EqualTo(DateTime.UtcNow.Year));
         Assert.That(settings.MaintenanceMode, Is.False);
         Assert.That(settings.ShowRanks, Is.True);

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PLDGA.Application.DTOs;
 using PLDGA.Application.Interfaces;
@@ -68,5 +69,52 @@ public class AccountController : Controller
     public IActionResult AccessDenied()
     {
         return View();
+    }
+
+    [Authorize]
+    [HttpGet]
+    public IActionResult ChangePassword()
+    {
+        return View();
+    }
+
+    [Authorize]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ChangePassword(string currentPassword, string newPassword, string confirmPassword)
+    {
+        if (string.IsNullOrWhiteSpace(currentPassword) || string.IsNullOrWhiteSpace(newPassword))
+        {
+            ModelState.AddModelError("", "All fields are required.");
+            return View();
+        }
+
+        if (newPassword != confirmPassword)
+        {
+            ModelState.AddModelError("", "New password and confirmation do not match.");
+            return View();
+        }
+
+        if (newPassword.Length < 6)
+        {
+            ModelState.AddModelError("", "New password must be at least 6 characters.");
+            return View();
+        }
+
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+        if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out var userId))
+        {
+            return RedirectToAction("Login");
+        }
+
+        var success = await _authService.ChangePasswordAsync(userId, currentPassword, newPassword);
+        if (!success)
+        {
+            ModelState.AddModelError("", "Current password is incorrect.");
+            return View();
+        }
+
+        TempData["Success"] = "Password changed successfully.";
+        return RedirectToAction("ChangePassword");
     }
 }

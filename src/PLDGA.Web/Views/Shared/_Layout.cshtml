@@ -11,8 +11,8 @@
     <header>
         <nav class="navbar navbar-expand-lg navbar-pldga">
             <div class="container">
-                <a class="navbar-brand fw-bold" asp-controller="Home" asp-action="Index">
-                    🥏 PLDGA
+                <a class="navbar-brand fw-bold d-flex align-items-center" asp-controller="Home" asp-action="Index">
+                    <img src="~/images/pldga.jpg" alt="PLDGA" class="navbar-logo" /> PLDGA
                 </a>
                 <button class="navbar-toggler border-light" type="button" data-bs-toggle="collapse" data-bs-target="#navMain" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon" style="filter:invert(1);"></span>
@@ -40,11 +40,18 @@
                     <ul class="navbar-nav">
                         @if (User.Identity?.IsAuthenticated == true)
                         {
-                            <li class="nav-item"><a class="nav-link" asp-controller="Members" asp-action="Profile">@User.Identity.Name</a></li>
-                            <li class="nav-item">
-                                <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
-                                    <button type="submit" class="nav-link btn btn-link" style="color:#fff;">Logout</button>
-                                </form>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">@User.Identity.Name</a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" asp-controller="Members" asp-action="Profile">My Profile</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Account" asp-action="ChangePassword">Change Password</a></li>
+                                    <li><hr class="dropdown-divider" /></li>
+                                    <li>
+                                        <form asp-controller="Account" asp-action="Logout" method="post">
+                                            <button type="submit" class="dropdown-item">Logout</button>
+                                        </form>
+                                    </li>
+                                </ul>
                             </li>
                         }
                         else
@@ -79,6 +86,7 @@
 
     <footer class="footer-pldga mt-5 py-4">
         <div class="container text-center">
+            <img src="~/images/pldga.jpg" alt="PLDGA" class="footer-logo" />
             <p class="mb-1">&copy; @DateTime.Now.Year Parkland Disc Golf Association</p>
             <small>Parkland, WA &middot; Disc Golf in the Puget Sound</small>
         </div>

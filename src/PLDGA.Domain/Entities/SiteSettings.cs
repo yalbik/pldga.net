@@ -37,9 +37,9 @@ public class SiteSettings
     // Appearance
     public string SiteTitle { get; set; } = "Parkland Disc Golf Association";
     public string SiteTagline { get; set; } = "Disc Golf in the Puget Sound";
-    public string LogoPath { get; set; } = string.Empty;
-    public string PrimaryColor { get; set; } = "#2d6a4f";
-    public string SecondaryColor { get; set; } = "#40916c";
+    public string LogoPath { get; set; } = "/images/pldga.jpg";
+    public string PrimaryColor { get; set; } = "#4A8FC2";
+    public string SecondaryColor { get; set; } = "#D4792A";
     public string FooterText { get; set; } = "© Parkland Disc Golf Association";
     public string FacebookUrl { get; set; } = string.Empty;
     public string InstagramUrl { get; set; } = string.Empty;
