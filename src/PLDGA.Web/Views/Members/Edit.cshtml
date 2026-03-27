@@ -14,6 +14,7 @@
         <div class="form-check mb-3"><input asp-for="IsPaid" class="form-check-input" /><label class="form-check-label">Paid</label></div>
         <div class="form-check mb-3"><input asp-for="IsAdmin" class="form-check-input" /><label class="form-check-label">Admin</label></div>
         <button type="submit" class="btn btn-pldga">Save</button>
+        <a asp-action="ResetPassword" asp-route-id="@Model.Id" class="btn btn-outline-warning">Reset Password</a>
         <a asp-controller="Members" asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
     </form>
 </div></div>

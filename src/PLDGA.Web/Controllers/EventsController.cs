@@ -42,10 +42,11 @@ public class EventsController : BaseController
     public async Task<IActionResult> Create()
     {
         var settings = await _settingsService.GetSettingsAsync();
+        var eventDate = DateTime.UtcNow.AddDays(30);
         var dto = new CreateEventDto
         {
-            Date = DateTime.UtcNow.AddDays(30),
-            RegistrationDeadline = DateTime.UtcNow.AddDays(30 - settings.DefaultRegistrationDeadlineDays),
+            Date = new DateTime(eventDate.Year, eventDate.Month, eventDate.Day, eventDate.Hour, eventDate.Minute, 0),
+            RegistrationDeadline = new DateTime(eventDate.Year, eventDate.Month, eventDate.Day, eventDate.Hour, eventDate.Minute - 1, 0),
             MaxParticipants = settings.DefaultMaxParticipants
         };
         return View(dto);
@@ -62,8 +63,8 @@ public class EventsController : BaseController
             return View(model);
         }
 
-        var settings = await _settingsService.GetSettingsAsync();
-        await _eventService.CreateEventAsync(model, settings.CurrentSeasonYear);
+        var seasonYear = model.Date.Year;
+        await _eventService.CreateEventAsync(model, seasonYear);
         TempData["Success"] = "Event created successfully.";
         return RedirectToAction(nameof(Index));
     }

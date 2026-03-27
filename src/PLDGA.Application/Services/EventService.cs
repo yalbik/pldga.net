@@ -62,16 +62,19 @@ public class EventService : IEventService
 
     public async Task<EventDto> CreateEventAsync(CreateEventDto dto, int seasonYear)
     {
+        var isPastEvent = dto.Date < DateTime.UtcNow;
+        var eventDate = new DateTime(dto.Date.Year, dto.Date.Month, dto.Date.Day, dto.Date.Hour, dto.Date.Minute, 0, dto.Date.Kind);
+        var regDeadline = new DateTime(dto.RegistrationDeadline.Year, dto.RegistrationDeadline.Month, dto.RegistrationDeadline.Day, dto.RegistrationDeadline.Hour, dto.RegistrationDeadline.Minute, 0, dto.RegistrationDeadline.Kind);
         var evt = new Event
         {
             Name = dto.Name,
-            Date = dto.Date,
+            Date = eventDate,
             LocationName = dto.LocationName,
             LocationAddress = dto.LocationAddress,
             CourseInfo = dto.CourseInfo,
             MaxParticipants = dto.MaxParticipants,
-            RegistrationDeadline = dto.RegistrationDeadline,
-            Status = EventStatus.Upcoming,
+            RegistrationDeadline = regDeadline,
+            Status = isPastEvent ? EventStatus.Completed : EventStatus.Upcoming,
             SeasonYear = seasonYear
         };
 
@@ -95,12 +98,12 @@ public class EventService : IEventService
             ?? throw new InvalidOperationException("Event not found.");
 
         evt.Name = dto.Name;
-        evt.Date = dto.Date;
+        evt.Date = new DateTime(dto.Date.Year, dto.Date.Month, dto.Date.Day, dto.Date.Hour, dto.Date.Minute, 0, dto.Date.Kind);
         evt.LocationName = dto.LocationName;
         evt.LocationAddress = dto.LocationAddress;
         evt.CourseInfo = dto.CourseInfo;
         evt.MaxParticipants = dto.MaxParticipants;
-        evt.RegistrationDeadline = dto.RegistrationDeadline;
+        evt.RegistrationDeadline = new DateTime(dto.RegistrationDeadline.Year, dto.RegistrationDeadline.Month, dto.RegistrationDeadline.Day, dto.RegistrationDeadline.Hour, dto.RegistrationDeadline.Minute, 0, dto.RegistrationDeadline.Kind);
 
         await _eventRepository.UpdateAsync(evt);
     }

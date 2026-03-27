@@ -97,6 +97,24 @@ public class AuthService : IAuthService
         return true;
     }
 
+    public async Task<bool> AdminResetPasswordAsync(Guid memberId, string newPassword)
+    {
+        var member = await _memberRepository.GetByIdAsync(memberId);
+        if (member == null || string.IsNullOrEmpty(member.UserId))
+            return false;
+
+        if (!Guid.TryParse(member.UserId, out var userId))
+            return false;
+
+        var user = await _userRepository.GetByIdAsync(userId);
+        if (user == null)
+            return false;
+
+        user.PasswordHash = HashPassword(newPassword);
+        await _userRepository.UpdateAsync(user);
+        return true;
+    }
+
     public string HashPassword(string password)
     {
         var salt = RandomNumberGenerator.GetBytes(SaltSize);

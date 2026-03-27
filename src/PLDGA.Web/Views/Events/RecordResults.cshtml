@@ -2,32 +2,68 @@
 @{
     ViewData["Title"] = "Record Results";
     var allMembers = ViewData["AllMembers"] as List<MemberDto> ?? new();
+    var hasExisting = Model.Results.Any();
+    var rowCount = hasExisting ? Model.Results.Count : Math.Max(Model.RegisteredCount, 1);
 }
 
-<h2 class="section-title">Record Results - @Model.Name</h2>
+<h2 class="section-title">@(hasExisting ? "Edit" : "Record") Results - @Model.Name</h2>
 <form asp-action="RecordResults" method="post">
     <input type="hidden" name="id" value="@Model.Id" />
     <table class="table" id="resultsTable">
-        <thead><tr><th>Player</th><th>Placement</th><th>Score</th></tr></thead>
+        <thead><tr><th>Player</th><th>Placement</th><th>Score</th><th></th></tr></thead>
         <tbody>
-            @for (int i = 0; i < Math.Max(Model.RegisteredCount, 1); i++)
+            @for (int i = 0; i < rowCount; i++)
             {
+                var existing = hasExisting && i < Model.Results.Count ? Model.Results[i] : null;
                 <tr>
                     <td>
                         <select name="results[@i].MemberId" class="form-select">
                             <option value="">-- Select Player --</option>
                             @foreach (var m in allMembers)
                             {
-                                <option value="@m.Id">@m.FullName @(m.IsPaid ? "" : "(Unpaid)")</option>
+                                var selected = existing != null && m.Id == existing.MemberId;
+                                <option value="@m.Id" selected="@selected">@m.FullName @(m.IsPaid ? "" : "(Unpaid)")</option>
                             }
                         </select>
                     </td>
-                    <td><input name="results[@i].Placement" type="number" class="form-control" value="@(i+1)" /></td>
-                    <td><input name="results[@i].Score" type="number" class="form-control" value="0" /></td>
+                    <td><input name="results[@i].Placement" type="number" class="form-control" value="@(existing?.Placement ?? i + 1)" /></td>
+                    <td><input name="results[@i].Score" type="number" class="form-control" value="@(existing?.Score ?? 0)" /></td>
+                    <td><button type="button" class="btn btn-sm btn-outline-danger remove-row">✕</button></td>
                 </tr>
             }
         </tbody>
     </table>
-    <button type="submit" class="btn btn-pldga">Save Results & Complete Event</button>
-    <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-secondary">Cancel</a>
+    <button type="button" id="addRow" class="btn btn-outline-secondary mb-3">+ Add Player</button>
+    <div>
+        <button type="submit" class="btn btn-pldga">Save Results & Complete Event</button>
+        <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-secondary">Cancel</a>
+    </div>
 </form>
+
+@section Scripts {
+<script>
+    var memberOptions = '@Html.Raw(string.Join("", allMembers.Select(m => $"<option value=\"{m.Id}\">{m.FullName} {(m.IsPaid ? "" : "(Unpaid)")}</option>")))';
+    document.getElementById('addRow').addEventListener('click', function () {
+        var tbody = document.querySelector('#resultsTable tbody');
+        var idx = tbody.rows.length;
+        var row = tbody.insertRow();
+        row.innerHTML =
+            '<td><select name="results[' + idx + '].MemberId" class="form-select"><option value="">-- Select Player --</option>' + memberOptions + '</select></td>' +
+            '<td><input name="results[' + idx + '].Placement" type="number" class="form-control" value="' + (idx + 1) + '" /></td>' +
+            '<td><input name="results[' + idx + '].Score" type="number" class="form-control" value="0" /></td>' +
+            '<td><button type="button" class="btn btn-sm btn-outline-danger remove-row">✕</button></td>';
+    });
+    document.getElementById('resultsTable').addEventListener('click', function (e) {
+        if (e.target.classList.contains('remove-row')) {
+            e.target.closest('tr').remove();
+            // Re-index rows
+            var rows = document.querySelectorAll('#resultsTable tbody tr');
+            rows.forEach(function (row, i) {
+                row.querySelector('select').name = 'results[' + i + '].MemberId';
+                row.querySelectorAll('input')[0].name = 'results[' + i + '].Placement';
+                row.querySelectorAll('input')[1].name = 'results[' + i + '].Score';
+            });
+        }
+    });
+</script>
+}

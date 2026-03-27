@@ -11,12 +11,14 @@ public class MembersController : BaseController
     private readonly IMemberService _memberService;
     private readonly ILeaderboardService _leaderboardService;
     private readonly ISiteSettingsService _settingsService;
+    private readonly IAuthService _authService;
 
-    public MembersController(IMemberService memberService, ILeaderboardService leaderboardService, ISiteSettingsService settingsService)
+    public MembersController(IMemberService memberService, ILeaderboardService leaderboardService, ISiteSettingsService settingsService, IAuthService authService)
     {
         _memberService = memberService;
         _leaderboardService = leaderboardService;
         _settingsService = settingsService;
+        _authService = authService;
     }
 
     [Authorize(Roles = "Admin")]
@@ -50,7 +52,19 @@ public class MembersController : BaseController
             return View(model);
         }
 
-        await _memberService.CreateMemberAsync(model);
+        if (string.IsNullOrWhiteSpace(model.Username) || string.IsNullOrWhiteSpace(model.Password))
+        {
+            ModelState.AddModelError("", "Username and password are required.");
+            return View(model);
+        }
+
+        var result = await _authService.RegisterAsync(model);
+        if (!result.Success)
+        {
+            ModelState.AddModelError("", result.ErrorMessage ?? "Failed to create member.");
+            return View(model);
+        }
+
         TempData["Success"] = "Member created successfully.";
         return RedirectToAction(nameof(Index));
     }
@@ -111,6 +125,55 @@ public class MembersController : BaseController
         await _memberService.DeleteMemberAsync(id);
         TempData["Success"] = "Member deleted.";
         return RedirectToAction(nameof(Index));
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpGet]
+    public async Task<IActionResult> ResetPassword(Guid id)
+    {
+        var member = await _memberService.GetMemberByIdAsync(id);
+        if (member == null) return NotFound();
+        ViewData["MemberName"] = member.FullName;
+        ViewData["MemberId"] = member.Id;
+        return View();
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ResetPassword(Guid id, string newPassword, string confirmPassword)
+    {
+        var member = await _memberService.GetMemberByIdAsync(id);
+        if (member == null) return NotFound();
+
+        ViewData["MemberName"] = member.FullName;
+        ViewData["MemberId"] = member.Id;
+
+        if (string.IsNullOrWhiteSpace(newPassword))
+        {
+            ModelState.AddModelError("", "Password is required.");
+            return View();
+        }
+        if (newPassword.Length < 6)
+        {
+            ModelState.AddModelError("", "Password must be at least 6 characters.");
+            return View();
+        }
+        if (newPassword != confirmPassword)
+        {
+            ModelState.AddModelError("", "Passwords do not match.");
+            return View();
+        }
+
+        var success = await _authService.AdminResetPasswordAsync(id, newPassword);
+        if (!success)
+        {
+            ModelState.AddModelError("", "Failed to reset password. Member may not have a user account.");
+            return View();
+        }
+
+        TempData["Success"] = $"Password reset for {member.FullName}.";
+        return RedirectToAction(nameof(Edit), new { id });
     }
 
     public async Task<IActionResult> Profile(Guid? id = null)
