@@ -14,22 +14,25 @@ RUN dotnet restore
 
 # Copy all source and build
 COPY . .
+RUN dotnet test tests/PLDGA.Tests/PLDGA.Tests.csproj -c Release --no-restore
 RUN dotnet publish src/PLDGA.Web/PLDGA.Web.csproj -c Release -o /app/publish --no-restore
 
 # Runtime stage
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
-EXPOSE 10420
+EXPOSE 8080
 
 # Create data directory for JSON persistence
-RUN mkdir -p /app/App_Data
+# Azure App Service mounts persistent storage at /home
+RUN mkdir -p /home/App_Data
 
 COPY --from=build /app/publish .
 
-ENV ASPNETCORE_URLS=http://+:10420
+ENV ASPNETCORE_URLS=http://+:8080
 ENV ASPNETCORE_ENVIRONMENT=Production
+ENV APP_DATA_PATH=/home/App_Data
 
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:10420/ || exit 1
+HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
+    CMD wget -qO- http://localhost:8080/ || exit 1
 
 ENTRYPOINT ["dotnet", "PLDGA.Web.dll"]

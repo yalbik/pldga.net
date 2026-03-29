@@ -3,10 +3,13 @@ using PLDGA.Application.Interfaces;
 using PLDGA.Domain.Entities;
 using PLDGA.Domain.Interfaces;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var dataDirectory = Path.Combine(builder.Environment.ContentRootPath, "App_Data");
+var dataDirectory = Environment.GetEnvironmentVariable("APP_DATA_PATH")
+    ?? Path.Combine(builder.Environment.ContentRootPath, "App_Data");
+Directory.CreateDirectory(dataDirectory);
 builder.Services.AddInfrastructure(dataDirectory);
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -62,6 +65,11 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
+
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+});
 
 app.UseStaticFiles();
 app.UseRouting();

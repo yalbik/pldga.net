@@ -3,9 +3,12 @@ services:
   pldga:
     build: .
     ports:
-      - "10420:10420"
+      - "8080:8080"
     volumes:
-      - pldga-data:/app/App_Data
+      - pldga-data:/home/App_Data
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - APP_DATA_PATH=/home/App_Data
     restart: unless-stopped
 
 volumes:
