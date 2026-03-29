@@ -1,0 +1,37 @@
+@model MemberDto
+@{ 
+    ViewData["Title"] = Model.FullName; 
+    var standing = ViewData["Standing"] as LeaderboardEntryDto;
+}
+
+<h2 class="section-title">@Model.FullName @if (!Model.IsPaid) { <span class="badge-unpaid">Unpaid</span> } else { <span class="badge-paid">Paid</span> }</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card card-pldga mb-4"><div class="card-body">
+            <h5 class="card-title">Profile</h5>
+            <p><strong>Email:</strong> @Model.Email</p>
+            <p><strong>Phone:</strong> @Model.Phone</p>
+            <p><strong>Member Since:</strong> @Model.RegistrationDate.ToString("MMMM dd, yyyy")</p>
+            @if (Model.PaymentDate.HasValue) { <p><strong>Payment Date:</strong> @Model.PaymentDate.Value.ToString("MMMM dd, yyyy")</p> }
+            <p><strong>Role:</strong> @(Model.IsAdmin ? "Admin" : "Member")</p>
+            <a asp-controller="Account" asp-action="ChangePassword" class="btn btn-sm btn-outline-pldga">Change Password</a>
+        </div></div>
+    </div>
+    <div class="col-md-6">
+        <div class="card card-pldga mb-4"><div class="card-body">
+            <h5 class="card-title">Season Stats</h5>
+            @if (standing != null)
+            {
+                <p><strong>Rank:</strong> #@standing.Rank</p>
+                <p><strong>Points:</strong> @standing.TotalPoints</p>
+                <p><strong>Events Played:</strong> @standing.EventsPlayed</p>
+                <a asp-controller="Leaderboard" asp-action="Player" asp-route-id="@Model.Id" class="btn btn-sm btn-outline-pldga">View Breakdown</a>
+            }
+            else
+            {
+                <p class="text-muted">No events played this season.</p>
+            }
+        </div></div>
+    </div>
+</div>

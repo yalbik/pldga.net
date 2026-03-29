@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  pldga:
+    build: .
+    ports:
+      - "10420:10420"
+    volumes:
+      - pldga-data:/app/App_Data
+    restart: unless-stopped
+
+volumes:
+  pldga-data:

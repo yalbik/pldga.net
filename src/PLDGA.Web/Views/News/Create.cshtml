@@ -1,0 +1,15 @@
+@model CreateNewsArticleDto
+@{ ViewData["Title"] = "Write Article"; }
+
+<h2 class="section-title">Write Article</h2>
+<div class="row"><div class="col-md-8">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <form asp-action="Create" method="post" enctype="multipart/form-data">
+        <div class="mb-3"><label class="form-label">Title</label><input asp-for="Title" class="form-control" required /></div>
+        <div class="mb-3"><label class="form-label">Content</label><textarea asp-for="Content" class="form-control" rows="10" required></textarea></div>
+        <div class="mb-3"><label class="form-label">Image (optional)</label><input name="image" type="file" class="form-control" accept="image/*" /></div>
+        <div class="form-check mb-3"><input asp-for="IsFeatured" class="form-check-input" /><label class="form-check-label">Featured</label></div>
+        <button type="submit" class="btn btn-pldga">Submit for Approval</button>
+        <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+    </form>
+</div></div>

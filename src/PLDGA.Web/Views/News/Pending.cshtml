@@ -1,0 +1,19 @@
+@model IEnumerable<NewsArticleDto>
+@{ ViewData["Title"] = "Pending Articles"; }
+
+<h2 class="section-title">📋 Pending Articles</h2>
+@if (Model.Any())
+{
+    @foreach (var a in Model)
+    {
+        <div class="card card-pldga mb-3"><div class="card-body">
+            <h5 class="card-title">@a.Title</h5>
+            <p class="text-muted mb-1">By @a.AuthorName &middot; @a.CreatedDate.ToString("MMM dd, yyyy")</p>
+            <p>@(a.Content.Length > 200 ? a.Content[..200] + "..." : a.Content)</p>
+            <form asp-action="Approve" method="post" class="d-inline"><input type="hidden" name="id" value="@a.Id" /><button class="btn btn-sm btn-success">Approve</button></form>
+            <form asp-action="Reject" method="post" class="d-inline"><input type="hidden" name="id" value="@a.Id" /><button class="btn btn-sm btn-danger">Reject</button></form>
+            <a asp-action="Details" asp-route-id="@a.Id" class="btn btn-sm btn-outline-pldga">Preview</a>
+        </div></div>
+    }
+}
+else { <p class="text-muted">No pending articles.</p> }

@@ -1,0 +1,29 @@
+@model LeaderboardEntryDto
+@{ ViewData["Title"] = $"{Model.MemberName} - Standings"; var year = (int)ViewData["Year"]!; }
+
+<h2 class="section-title">@Model.MemberName @if (!Model.IsPaid) { <span class="badge-unpaid">Unpaid</span> }</h2>
+<p><strong>Rank:</strong> #@Model.Rank &middot; <strong>Total Points:</strong> @Model.TotalPoints &middot; <strong>Events Played:</strong> @Model.EventsPlayed</p>
+
+<h4 class="mt-4">Event Breakdown - @year</h4>
+@if (Model.EventBreakdown.Any())
+{
+    <table class="table table-hover">
+        <thead class="table-light"><tr><th>Event</th><th>Date</th><th>Placement</th><th>Points</th></tr></thead>
+        <tbody>
+            @foreach (var eb in Model.EventBreakdown.OrderByDescending(e => e.EventDate))
+            {
+                <tr>
+                    <td><a asp-controller="Events" asp-action="Details" asp-route-id="@eb.EventId">@eb.EventName</a></td>
+                    <td>@eb.EventDate.ToString("MMM dd, yyyy")</td>
+                    <td>@eb.Placement</td>
+                    <td>@eb.PointsAwarded</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p class="text-muted">No events recorded.</p>
+}
+<a asp-action="Index" asp-route-year="@year" class="btn btn-outline-pldga">← Back to Leaderboard</a>
